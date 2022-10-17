@@ -28,17 +28,6 @@ export default function ProfileScreen() {
     const [loading, setLoading] = useState(false);
     const [loadingLocker, setLoadingLocker] = useState(true);
 
-    const handleLogout = () => {
-        api.get('/logout/students', { withCredentials: true }).then(() => {
-            setUser({
-                ra: '',
-                first_name: '',
-                last_name: '',
-                email: '',
-            });
-        });
-    };
-
     const loadLocker = async () => {
         if (user.locker_number) {
             api
@@ -196,10 +185,10 @@ export default function ProfileScreen() {
                             )
                             : (
                                 <>
-                                    <TouchableOpacity onPress={handleLogout} activeOpacity={0.8} style={styles.imageU2}>
+                                    <TouchableOpacity onPress={() => { navigation.navigate('ConfigurationScreen'); }} activeOpacity={0.8} style={styles.imageU2}>
                                         <MaterialIcons
-                                            name="logout"
-                                            size={25}
+                                            name="settings"
+                                            size={28}
                                         />
                                     </TouchableOpacity>
 

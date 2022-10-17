@@ -44,7 +44,10 @@ export default function ForgotPasswordScreen() {
             });
     };
 
-    const backAction = () => true;
+    const backAction = () => {
+        navigation.navigate('LoginScreen');
+        return true;
+    };
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(

@@ -10,6 +10,7 @@ import LockerContainerYellow from '../../assets/LockerContainerYellow.png';
 import LockerImage from '../../assets/LockerImage.png';
 import Button from '../../components/Button';
 import gStyles from '../../components/gStyles';
+import Loading from '../../components/Loading';
 import useLocker from '../../hooks/useLocker';
 import api from '../../services/api';
 import styles from './styles';
@@ -59,8 +60,10 @@ export default function LockersMap() {
     const [lockersPage, setLockersPage] = useState([]);
     const [modV, setModV] = useState([false]);
     const [lockerModal, setLockerModal] = useState({});
+    const [howManyPages, setHowManyPages] = useState(0);
     const { locker, setLocker } = useLocker();
     const [floor, setFloor] = useState(1);
+    const [pageLoaded, setPageLoaded] = useState(false);
     const [arrowLeftFloorEnabled, setArrowLeftFloorEnabled] = useState(false);
     const [arrowRightFloorEnabled, setArrowRightFloorEnabled] = useState(false);
     const { width, height } = Dimensions.get('window');
@@ -84,28 +87,12 @@ export default function LockersMap() {
                 lockersSection.push(element);
             }
         });
-        setLockersSectionChoosed(lockersSection);
-    };
 
-    function sliceLockersInStepsOfTwo(start, end) {
-        const response = [];
-        console.log('chamou splice');
-        if (end > lockersSectionChoosed.length) {
-            return;
-        }
-        for (let i = start; i <= end; i += 2) {
-            response.push(lockersSectionChoosed[i]);
-        }
-        // eslint-disable-next-line consistent-return
-        return response;
-    }
-
-    function parseLockers() {
-        const lockersSplited = [];
+        const lockersSectionSplited = [];
         let i = 0;
         let times = 0;
         let sum = 1;
-        while (i < lockersSectionChoosed.length) {
+        while (i < lockersSection.length) {
             if (times > 0) {
                 times = 0;
                 sum = 7;
@@ -113,15 +100,30 @@ export default function LockersMap() {
                 sum = 1;
                 times++;
             }
-            const sliced = sliceLockersInStepsOfTwo(i, i + 6);
+            const sliced = [];
+            if (!(i + 6 > lockersSection.length)) {
+                for (let i2 = i; i2 <= i + 6; i2 += 2) {
+                    sliced.push(lockersSection[i2]);
+                }
+            }
             if (sliced == undefined) {
                 break;
             }
-            lockersSplited.push(sliced);
+            lockersSectionSplited.push(sliced);
             i += sum;
         }
-        setLockersSectionChoosedOrdened(lockersSplited);
-    }
+
+        const newArray = [];
+        let cont = 0;
+        let start = 0;
+        while (cont < Math.ceil(lockersSectionSplited.length / 4)) {
+            start = cont * 4;
+            newArray.push(lockersSectionSplited.slice(start, start + 4));
+            cont++;
+        }
+        console.log(newArray);
+        setLockersSectionChoosedOrdened(newArray);
+    };
 
     const backAction = () => {
         if (sectionChoosed <= 0) {
@@ -141,36 +143,38 @@ export default function LockersMap() {
 
     useEffect(() => {
         loadSection();
+        setPage(0);
     }, [sectionChoosed]);
 
     useEffect(() => {
-        setSizeLockersLine(lockersSectionChoosed.length / 4);
-        parseLockers();
         BackHandler.addEventListener('hardwareBackPress', backAction);
         return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
     }, [lockersSectionChoosed]);
 
     useEffect(() => {
-        setEndPages(Math.ceil(sizeLockersLine / 4) - 1);
-    }, [sizeLockersLine]);
-
-    useEffect(() => {
-        spliceIntoChunks(lockersSectionChoosedOrdened, page);
+        setHowManyPages(lockersSectionChoosedOrdened.length - 1);
     }, [lockersSectionChoosedOrdened]);
 
     useEffect(() => {
-        spliceIntoChunks(lockersSectionChoosedOrdened, page);
+        if (howManyPages > 0) {
+            setPageLoaded(true);
+        }
+    }, [howManyPages]);
+
+    useEffect(() => {
+        console.log('ME CHAMOU');
+        console.log(howManyPages);
         if (page > 0) {
             setArrowLeftEnabled(true);
         } else {
             setArrowLeftEnabled(false);
         }
-        if (page < endPages) {
+        if (page < howManyPages) {
             setArrowRightEnabled(true);
         } else {
             setArrowRightEnabled(false);
         }
-    }, [page, endPages]);
+    }, [page, howManyPages]);
 
     useEffect(() => {
         if (floor > 1) {
@@ -184,13 +188,6 @@ export default function LockersMap() {
             setArrowRightFloorEnabled(false);
         }
     }, [floor]);
-
-    useEffect(() => {
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
-        console.log(sectionChoosed);
-        console.log(arrowLeftEnabled);
-        console.log(arrowRightEnabled);
-    }, [arrowLeftEnabled, arrowRightEnabled]);
 
     let auxAvalible = { backgroundColor: '#4ECB71' };
 
@@ -227,7 +224,7 @@ export default function LockersMap() {
         }, 2);
     };
 
-    function spliceIntoChunks(array, pageFunction) {
+    /* function spliceIntoChunks(array, pageFunction) {
         console.log('teste');
         // ta recebendo array certo
         console.log(array);
@@ -238,13 +235,13 @@ export default function LockersMap() {
         console.log('teste splice');
         console.log(result);
         setLockersPage(result);
-    }
+    } */
 
     const go = () => {
         console.log('go');
         console.log(page);
         console.log(endPages);
-        if (page < endPages) { setPage(page + 1); }
+        if (page < howManyPages) { setPage(page + 1); }
     };
 
     const back = () => {
@@ -323,126 +320,133 @@ export default function LockersMap() {
             </Modal>
 
             {
+                // eslint-disable-next-line no-nested-ternary
                 !sectionChoosed
                     ? (
-                        <>
-                            <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-left"
-                                    color="#0085FF"
-                                    size={49}
-                                />
-                            </TouchableOpacity>
+                        !lockers ? <Loading />
+                            : (
+                                <>
+                                    <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
+                                        <MaterialIcons
+                                            name="keyboard-arrow-left"
+                                            color="#0085FF"
+                                            size={49}
+                                        />
+                                    </TouchableOpacity>
 
-                            <View style={{ marginTop: getStatusBarHeight() + 40 }}>
-                                <View View style={[gStyles.textContainer]}>
-                                    <Text style={gStyles.title}>Alugue um Armário</Text>
-                                    <Text style={gStyles.subtitle}>Selecione o bloco que você deseja</Text>
-                                </View>
-                            </View>
+                                    <View style={{ marginTop: getStatusBarHeight() + 40 }}>
+                                        <View View style={[gStyles.textContainer]}>
+                                            <Text style={gStyles.title}>Alugue um Armário</Text>
+                                            <Text style={gStyles.subtitle}>Selecione o bloco que você deseja</Text>
+                                        </View>
+                                    </View>
 
-                            {/* {
+                                    {/* {
                                 !lockersReady ?
 
                             } */}
 
-                            <FlatList
-                                style={[styles.flatlist]}
-                                data={mapLocker[floor - 1]}
-                                renderItem={({ item }) => {
-                                    if (item.type == 'line') {
-                                        return (<View style={[gStyles.line, styles.line]} />);
-                                    }
+                                    <FlatList
+                                        style={[styles.flatlist]}
+                                        data={mapLocker[floor - 1]}
+                                        renderItem={({ item }) => {
+                                            if (item.type == 'line') {
+                                                return (<View style={[gStyles.line, styles.line]} />);
+                                            }
 
-                                    if (item.type) {
-                                        return (<Text style={[gStyles.title, styles.flatData]}> {item.data} </Text>);
-                                    }
-                                    return (<TouchableOpacity onPress={item.pressFunc} style={styles.flatDataL}><Image source={item.data} style={styles.lockerImage} resizeMode="contain" /></TouchableOpacity>);
-                                }}
-                            />
-
-                            <View style={styles.navLockers}>
-                                <TouchableOpacity onPress={backFloor} disabled={!arrowLeftFloorEnabled}>
-                                    <MaterialIcons
-                                        name="keyboard-arrow-left"
-                                        color={arrowLeftFloorEnabled ? '#000000' : '#7D7B7B'}
-                                        size={64}
+                                            if (item.type) {
+                                                return (<Text style={[gStyles.title, styles.flatData]}> {item.data} </Text>);
+                                            }
+                                            return (<TouchableOpacity onPress={item.pressFunc} style={styles.flatDataL}><Image source={item.data} style={styles.lockerImage} resizeMode="contain" /></TouchableOpacity>);
+                                        }}
                                     />
-                                </TouchableOpacity>
 
-                                <Text style={gStyles.title}>{floor}º Andar</Text>
-
-                                <TouchableOpacity onPress={() => { goFloor(); console.log(floor); }} disabled={!arrowRightFloorEnabled}>
-                                    <MaterialIcons
-                                        name="keyboard-arrow-right"
-                                        color={arrowRightFloorEnabled ? '#000000' : '#7D7B7B'}
-                                        size={64}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </>
-                    )
-                    : (
-                        <>
-                            <TouchableOpacity onPress={() => { setSectionChoosed(0); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-left"
-                                    color="#0085FF"
-                                    size={49}
-                                />
-                            </TouchableOpacity>
-
-                            <View style={{ marginTop: getStatusBarHeight() + 40 }}>
-                                <View View style={gStyles.textContainer}>
-                                    <Text style={gStyles.title}>Alugue um Armário</Text>
-                                    <Text style={[gStyles.subtitle]}>Selecione o armário que você deseja.</Text>
-                                </View>
-                            </View>
-
-                            <FlatList
-                                style={[styles.flatlist]}
-                                data={lockersPage}
-                                columnWrapperStyle={styles.row}
-                                key="_"
-                                numColumns={4}
-                                renderItem={({ item }) => (
-                                    <View>
-                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[0]); console.log(arrowRightEnabled); }} style={styles.flatData}>
-                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[0].section.color }]} resizeMode="contain" />
+                                    <View style={styles.navLockers}>
+                                        <TouchableOpacity onPress={backFloor} disabled={!arrowLeftFloorEnabled}>
+                                            <MaterialIcons
+                                                name="keyboard-arrow-left"
+                                                color={arrowLeftFloorEnabled ? '#000000' : '#7D7B7B'}
+                                                size={64}
+                                            />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[1]); }} style={styles.flatData}>
-                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[1].section.color }]} resizeMode="contain" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[2]); }} style={styles.flatData}>
-                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[2].section.color }]} resizeMode="contain" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[3]); }} style={styles.flatData}>
-                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[3].section.color }]} resizeMode="contain" />
+
+                                        <Text style={gStyles.title}>{floor}º Andar</Text>
+
+                                        <TouchableOpacity onPress={() => { goFloor(); console.log(floor); }} disabled={!arrowRightFloorEnabled}>
+                                            <MaterialIcons
+                                                name="keyboard-arrow-right"
+                                                color={arrowRightFloorEnabled ? '#000000' : '#7D7B7B'}
+                                                size={64}
+                                            />
                                         </TouchableOpacity>
                                     </View>
-                                )}
-                            />
-                            <View style={styles.navLockers}>
-                                <TouchableOpacity onPress={back} disabled={!arrowLeftEnabled}>
-                                    <MaterialIcons
-                                        name="keyboard-arrow-left"
-                                        color={arrowLeftEnabled ? '#000000' : '#7D7B7B'}
-                                        size={64}
-                                    />
-                                </TouchableOpacity>
-                                <Text style={gStyles.title}>{page + 1}</Text>
-                                <Text style={gStyles.title}> / </Text>
-                                <Text style={gStyles.title}>{endPages + 1}</Text>
+                                </>
+                            )
+                    )
+                    : (
+                        !lockersSectionChoosedOrdened ? <Loading />
+                            : (
+                                <>
+                                    <TouchableOpacity onPress={() => { setSectionChoosed(0); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
+                                        <MaterialIcons
+                                            name="keyboard-arrow-left"
+                                            color="#0085FF"
+                                            size={49}
+                                        />
+                                    </TouchableOpacity>
 
-                                <TouchableOpacity onPress={go} disabled={!arrowRightEnabled}>
-                                    <MaterialIcons
-                                        name="keyboard-arrow-right"
-                                        color={arrowRightEnabled ? '#000000' : '#7D7B7B'}
-                                        size={64}
+                                    <View style={{ marginTop: getStatusBarHeight() + 40 }}>
+                                        <View View style={gStyles.textContainer}>
+                                            <Text style={gStyles.title}>Alugue um Armário</Text>
+                                            <Text style={[gStyles.subtitle]}>Selecione o armário que você deseja.</Text>
+                                        </View>
+                                    </View>
+
+                                    <FlatList
+                                        style={[styles.flatlist]}
+                                        data={lockersSectionChoosedOrdened[page]}
+                                        columnWrapperStyle={styles.row}
+                                        key="_"
+                                        numColumns={4}
+                                        renderItem={({ item }) => (
+                                            <View>
+                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[0]); console.log(arrowRightEnabled); }} style={styles.flatData}>
+                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[0].section.color }]} resizeMode="contain" />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[1]); }} style={styles.flatData}>
+                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[1].section.color }]} resizeMode="contain" />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[2]); }} style={styles.flatData}>
+                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[2].section.color }]} resizeMode="contain" />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[3]); }} style={styles.flatData}>
+                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[3].section.color }]} resizeMode="contain" />
+                                                </TouchableOpacity>
+                                            </View>
+                                        )}
                                     />
-                                </TouchableOpacity>
-                            </View>
-                        </>
+                                    <View style={styles.navLockers}>
+                                        <TouchableOpacity onPress={back} disabled={!arrowLeftEnabled}>
+                                            <MaterialIcons
+                                                name="keyboard-arrow-left"
+                                                color={arrowLeftEnabled ? '#000000' : '#7D7B7B'}
+                                                size={64}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={gStyles.title}>{page + 1}</Text>
+                                        <Text style={gStyles.title}> / </Text>
+                                        <Text style={gStyles.title}>{howManyPages + 1}</Text>
+
+                                        <TouchableOpacity onPress={go} disabled={!arrowRightEnabled}>
+                                            <MaterialIcons
+                                                name="keyboard-arrow-right"
+                                                color={arrowRightEnabled ? '#000000' : '#7D7B7B'}
+                                                size={64}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                            )
                     )
             }
 

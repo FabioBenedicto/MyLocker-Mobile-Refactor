@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     // header
 
     header: {
-        height: 120,
+        height: 140,
         alignContent: 'flex-end',
     },
 
@@ -55,8 +55,6 @@ const styles = StyleSheet.create({
     },
 
     imageU2: {
-        width: 22,
-        height: 23,
         position: 'absolute',
         top: 10,
         right: 20,

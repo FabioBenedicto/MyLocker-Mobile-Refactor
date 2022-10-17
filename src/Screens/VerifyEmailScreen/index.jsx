@@ -1,8 +1,6 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { createRef, useEffect, useState } from 'react';
-import { BackHandler, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import MyLockerLogo from '../../assets/MyLockerLogo.png';
 import Button from '../../components/Button';
@@ -123,12 +121,6 @@ export default function VerifyEmailScreen() {
         return false;
     }; */
 
-    const backAction = () => {
-        // scrClear();
-        navigation.goBack();
-        return true;
-    };
-
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -142,12 +134,10 @@ export default function VerifyEmailScreen() {
                 setKeyboardVisible(false); // or some other action
             },
         );
-        BackHandler.addEventListener('hardwareBackPress', backAction);
 
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
-            BackHandler.removeEventListener('hardwareBackPress', backAction);
         };
     }, []);
 
@@ -164,14 +154,6 @@ export default function VerifyEmailScreen() {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView bounces={false}>
                         <View style={[gStyles.container, { height: containerHeight }]}>
-
-                            <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-left"
-                                    color="#0085FF"
-                                    size={49}
-                                />
-                            </TouchableOpacity>
 
                             <View style={gStyles.imageContainer}>
                                 <Image source={MyLockerLogo} />

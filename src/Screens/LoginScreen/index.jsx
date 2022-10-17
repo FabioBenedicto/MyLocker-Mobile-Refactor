@@ -127,6 +127,7 @@ export default function LoginScreen() {
     };
 
     useEffect(() => {
+        console.log('oi');
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
@@ -171,17 +172,6 @@ export default function LoginScreen() {
                             !loginWithEmailSucceed
                                 ? (
                                     <View style={[gStyles.container, { height: containerHeight }]}>
-                                        {navigation.canGoBack()
-                                            ? (
-                                                <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                                    <MaterialIcons
-                                                        name="keyboard-arrow-left"
-                                                        color="#0085FF"
-                                                        size={49}
-                                                    />
-                                                </TouchableOpacity>
-                                            )
-                                            : null}
 
                                         <View style={gStyles.imageContainer}>
                                             <Image source={MyLockerLogo} style={gStyles.image} />

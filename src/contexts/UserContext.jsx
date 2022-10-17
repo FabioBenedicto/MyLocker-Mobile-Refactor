@@ -10,7 +10,7 @@ export function UserContextProvider({ children }) {
         last_name: '',
         email: '',
     });
-    const [cookieLoaded, setCookieLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         api
@@ -22,12 +22,12 @@ export function UserContextProvider({ children }) {
                 console.log(err.response.data);
             })
             .finally(() => {
-                setCookieLoaded(true);
+                setIsLoaded(true);
             });
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, setUser, cookieLoaded }}>
+        <UserContext.Provider value={{ user, setUser, isLoaded }}>
             {children}
         </UserContext.Provider>
     );

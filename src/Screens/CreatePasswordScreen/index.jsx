@@ -1,8 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, BackHandler, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { createRef } from 'react/cjs/react.production.min';
 import MyLockerLogo from '../../assets/MyLockerLogo.png';
@@ -88,14 +87,6 @@ export default function CreatePasswordScreen() {
         setConf('');
     }; */
 
-    const backAction = () => {
-        navigation.navigate('Login');
-
-        // scrClear();
-
-        return true;
-    };
-
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -109,12 +100,10 @@ export default function CreatePasswordScreen() {
                 setKeyboardVisible(false); // or some other action
             },
         );
-        BackHandler.addEventListener('hardwareBackPress', backAction);
 
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
-            BackHandler.removeEventListener('hardwareBackPress', backAction);
         };
     }, []);
 
@@ -127,17 +116,10 @@ export default function CreatePasswordScreen() {
                 }
             }}
         >
-            <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={40}>
+            <KeyboardAvoidingView behavior="height">
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView bounces={false}>
                         <View style={[gStyles.container, { height: containerHeight }]}>
-                            <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-left"
-                                    color="#0085FF"
-                                    size={49}
-                                />
-                            </TouchableOpacity>
 
                             <View style={gStyles.imageContainer}>
                                 <Image source={MyLockerLogo} />

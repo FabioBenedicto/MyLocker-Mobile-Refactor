@@ -22,7 +22,7 @@ const gStyles = StyleSheet.create({
 
     container: {
         flex: 1,
-        paddingHorizontal: '5%',
+        paddingHorizontal: '8%',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
@@ -239,7 +239,7 @@ const gStyles = StyleSheet.create({
     },
 
     modalLine: {
-        width: 80,
+        width: 60,
         height: 4,
         backgroundColor: 'grey',
         alignSelf: 'center',
