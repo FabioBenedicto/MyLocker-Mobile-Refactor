@@ -7,6 +7,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { MaterialIcons } from '@expo/vector-icons';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
+import useDarkTheme from '../../hooks/useDarkTheme';
 import useUser from '../../hooks/useUser';
 
 import Button from '../../components/Button';
@@ -16,6 +17,7 @@ import api from '../../services/api';
 import styles from './styles';
 
 import MyLockerLogo from '../../assets/MyLockerLogo.png';
+import MyLockerLogoPaintedWhite from '../../assets/MyLockerLogoPaintedWhite.png';
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -30,6 +32,7 @@ export default function LoginScreen() {
     const [loading, setLoading] = useState(false);
 
     const { user, setUser } = useUser();
+    const { darkTheme } = useDarkTheme();
 
     const forgotEmailToast = () => {
         toast.show(
@@ -174,7 +177,7 @@ export default function LoginScreen() {
                                     <View style={[gStyles.container, { height: containerHeight }]}>
 
                                         <View style={gStyles.imageContainer}>
-                                            <Image source={MyLockerLogo} style={gStyles.image} />
+                                            <Image source={!darkTheme ? MyLockerLogo : MyLockerLogoPaintedWhite} style={gStyles.image} />
                                         </View>
 
                                         <View style={{ width: '100%' }}>

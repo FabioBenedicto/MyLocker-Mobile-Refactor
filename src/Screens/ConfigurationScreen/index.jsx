@@ -1,17 +1,20 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useState } from 'react';
 import { Image, Switch, Text, TouchableOpacity, View } from 'react-native';
-import { launchCamera } from 'react-native-image-picker';
 import DefaultProfilePicture from '../../assets/DefaultProfilePicture.jpg';
 import gStyles from '../../components/gStyles';
+import useDarkTheme from '../../hooks/useDarkTheme';
 import useUser from '../../hooks/useUser';
 import api from '../../services/api';
-import THEME from '../../theme';
+import THEME from '../../theme/light';
 import styles from './styles';
 
 export default function ConfigurationScreen() {
     const [isEnabled, setIsEnabled] = useState(false);
+    const { darkTheme, setDarkTheme } = useDarkTheme();
     const [loading, setLoading] = useState(false);
     const [newProfilePicture, setNewProfilePicture] = useState('');
     const navigation = useNavigation();
@@ -30,12 +33,24 @@ export default function ConfigurationScreen() {
     };
 
     const handleUploadImage = async () => {
-        const selectedImage = await launchCamera();
+        const result = await ImagePicker.launchImageLibraryAsync();
+    };
+
+    const [fileResponse, setFileResponse] = useState([]);
+
+    const handleUploadDocument = async () => {
+        DocumentPicker.getDocumentAsync();
     };
 
     useEffect(() => {
         navigation.setOptions({ headerShown: true });
     }, []);
+
+    useEffect(() => {
+        if (isEnabled != darkTheme) {
+            setDarkTheme(isEnabled);
+        }
+    }, [isEnabled]);
 
     return (
         <View style={gStyles.container}>
@@ -67,7 +82,7 @@ export default function ConfigurationScreen() {
                     <MaterialIcons name="chevron-right" size={THEME.FONT_SIZE.LG} />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.8} style={{ height: 80, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <TouchableOpacity activeOpacity={0.8} onPress={handleUploadDocument} style={{ height: 80, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                         <MaterialIcons name="note-add" size={THEME.FONT_SIZE.LG} style={{ marginRight: 4 }} />
                         <Text style={{ fontSize: THEME.FONT_SIZE.MD, fontFamily: THEME.FONT_FAMILY.REGULAR }}>

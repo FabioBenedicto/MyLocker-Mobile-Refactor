@@ -1,6 +1,6 @@
 import { Dimensions, Platform, StyleSheet } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import THEME from '../theme';
+import THEME from '../theme/light';
 
 const { width, height } = Dimensions.get('window');
 

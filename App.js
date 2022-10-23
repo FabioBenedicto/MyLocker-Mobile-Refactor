@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ToastProvider } from 'react-native-toast-notifications';
+import DarkThemeContextProvider from './src/contexts/DarkThemeContext';
 import { LockerContextProvider } from './src/contexts/LockerContext';
 import { UserContextProvider } from './src/contexts/UserContext';
 import useUser from './src/hooks/useUser';
@@ -44,19 +45,21 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <ToastProvider placement="top" animationType="slide-in" offsetTop={getStatusBarHeight() + 40} textStyle={{ textAlign: 'center' }}>
-                <UserContextProvider>
-                    <LockerContextProvider>
-                        <StatusBar
-                            barStyle="light-content"
-                            backgroundColor="#002147"
-                        />
-                        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-                            <Routes />
-                        </View>
-                    </LockerContextProvider>
-                </UserContextProvider>
-            </ToastProvider>
+            <DarkThemeContextProvider>
+                <ToastProvider placement="top" animationType="slide-in" offsetTop={getStatusBarHeight() + 40} textStyle={{ textAlign: 'center' }}>
+                    <UserContextProvider>
+                        <LockerContextProvider>
+                            <StatusBar
+                                barStyle="light-content"
+                                backgroundColor="#002147"
+                            />
+                            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                                <Routes />
+                            </View>
+                        </LockerContextProvider>
+                    </UserContextProvider>
+                </ToastProvider>
+            </DarkThemeContextProvider>
         </NavigationContainer>
     );
 }
