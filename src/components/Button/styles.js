@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import DEFAULT from '../../theme/default';
 
 const styles = StyleSheet.create({
     container: {
@@ -11,8 +12,7 @@ const styles = StyleSheet.create({
     },
 
     inputDisable: {
-        backgroundColor: '#eeeeee',
-        color: '#7d7b7b',
+        backgroundColor: DEFAULT.COLORS.GRAY.DARK,
     },
 });
 

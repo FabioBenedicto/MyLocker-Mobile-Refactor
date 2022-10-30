@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
@@ -9,6 +10,7 @@ import gStyles from '../../components/gStyles';
 import useDarkTheme from '../../hooks/useDarkTheme';
 import useUser from '../../hooks/useUser';
 import api from '../../services/api';
+import DEFAULT from '../../theme/default';
 import THEME from '../../theme/light';
 import styles from './styles';
 
@@ -18,7 +20,7 @@ export default function ConfigurationScreen() {
     const [loading, setLoading] = useState(false);
     const [newProfilePicture, setNewProfilePicture] = useState('');
     const navigation = useNavigation();
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+    const toggleSwitch = () => setDarkTheme((previousState) => !previousState);
     const { user, setUser } = useUser();
 
     const handleLogout = () => {
@@ -43,14 +45,24 @@ export default function ConfigurationScreen() {
     };
 
     useEffect(() => {
-        navigation.setOptions({ headerShown: true });
+        navigation.setOptions({
+            headerTitleStyle: {
+                fontFamily: DEFAULT.FONT_FAMILY.BOLD,
+                color: DEFAULT.COLORS.WHITE,
+                fontSize: DEFAULT.FONT_SIZE.MD,
+                // textAlign: 'center',
+            },
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => { navigation.navigate('ProfileScreen'); }} activeOpacity={0.8}>
+                    <MaterialIcons
+                        name="keyboard-arrow-left"
+                        size={52}
+                        color={DEFAULT.COLORS.WHITE}
+                    />
+                </TouchableOpacity>
+            ),
+        });
     }, []);
-
-    useEffect(() => {
-        if (isEnabled != darkTheme) {
-            setDarkTheme(isEnabled);
-        }
-    }, [isEnabled]);
 
     return (
         <View style={gStyles.container}>
@@ -104,7 +116,7 @@ export default function ConfigurationScreen() {
                     </View>
                     <Switch
                         onValueChange={toggleSwitch}
-                        value={isEnabled}
+                        value={darkTheme}
                     />
                 </TouchableOpacity>
             </View>

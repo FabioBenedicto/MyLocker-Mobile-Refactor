@@ -66,54 +66,7 @@ const gStyles = StyleSheet.create({
     inputContainer: {
         width: '100%',
     },
-    input: {
-        width: '100%',
-        height: 75,
-        borderRadius: 10,
-        padding: 23,
-        backgroundColor: '#ffffff',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginBottom: 15,
-        fontSize: 20,
-        ...Platform.select({
-            android: {
-                elevation: 5,
-            },
-            ios: {
-                shadowColor: '#000',
-                shadowOffset: {
-                    width: 0,
-                    height: 1,
-                },
-                shadowOpacity: 0.2,
-                shadowRadius: 1.41,
-            },
-        }),
 
-    },
-    inputArea: {
-        flexDirection: 'row',
-        width: '100%',
-        height: 75,
-        backgroundColor: '#ffffff',
-        padding: 23,
-        paddingRight: 0,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginBottom: 15,
-        shadowColor: '#000',
-        elevation: 5,
-
-    },
-    passwordInput: {
-        width: '85%',
-        height: 75,
-        backgroundColor: '#ffffff',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        fontSize: 20,
-    },
     icon: {
         width: '15%',
         height: 75,

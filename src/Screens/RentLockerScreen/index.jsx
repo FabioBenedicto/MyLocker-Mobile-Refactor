@@ -1,8 +1,10 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, BackHandler, Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { CaretLeft } from 'phosphor-react';
 import LockerContainerBlue from '../../assets/LockerContainerBlue.png';
 import LockerContainerGreen from '../../assets/LockerContainerGreen.png';
 import LockerContainerRed from '../../assets/LockerContainerRed.png';
@@ -14,6 +16,7 @@ import Loading from '../../components/Loading';
 import useLocker from '../../hooks/useLocker';
 import api from '../../services/api';
 import styles from './styles';
+import DEFAULT from '../../theme/default';
 
 export default function LockersMap() {
     const navigation = useNavigation();
@@ -144,6 +147,31 @@ export default function LockersMap() {
     useEffect(() => {
         loadSection();
         setPage(0);
+        if (sectionChoosed == 0) {
+            navigation.setOptions({
+                headerLeft: () => (
+                    <TouchableOpacity onPress={() => { navigation.navigate('ProfileScreen'); }} activeOpacity={0.8}>
+                        <MaterialIcons
+                            name="keyboard-arrow-left"
+                            size={52}
+                            color={DEFAULT.COLORS.WHITE}
+                        />
+                    </TouchableOpacity>
+                ),
+            });
+        } else {
+            navigation.setOptions({
+                headerLeft: () => (
+                    <TouchableOpacity onPress={() => { setSectionChoosed(0); }} activeOpacity={0.8}>
+                        <MaterialIcons
+                            name="keyboard-arrow-left"
+                            size={52}
+                            color={DEFAULT.COLORS.WHITE}
+                        />
+                    </TouchableOpacity>
+                ),
+            });
+        }
     }, [sectionChoosed]);
 
     useEffect(() => {
@@ -323,18 +351,11 @@ export default function LockersMap() {
                 // eslint-disable-next-line no-nested-ternary
                 !sectionChoosed
                     ? (
-                        !lockers ? <Loading />
+                        lockers.length == 0 ? <Loading />
                             : (
                                 <>
-                                    <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                        <MaterialIcons
-                                            name="keyboard-arrow-left"
-                                            color="#0085FF"
-                                            size={49}
-                                        />
-                                    </TouchableOpacity>
 
-                                    <View style={{ marginTop: getStatusBarHeight() + 40 }}>
+                                    <View style={{ marginTop: 20 }}>
                                         <View View style={[gStyles.textContainer]}>
                                             <Text style={gStyles.title}>Alugue um Armário</Text>
                                             <Text style={gStyles.subtitle}>Selecione o bloco que você deseja</Text>
@@ -384,18 +405,10 @@ export default function LockersMap() {
                             )
                     )
                     : (
-                        !lockersSectionChoosedOrdened ? <Loading />
+                        lockersSectionChoosedOrdened == [] ? <Loading />
                             : (
                                 <>
-                                    <TouchableOpacity onPress={() => { setSectionChoosed(0); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                        <MaterialIcons
-                                            name="keyboard-arrow-left"
-                                            color="#0085FF"
-                                            size={49}
-                                        />
-                                    </TouchableOpacity>
-
-                                    <View style={{ marginTop: getStatusBarHeight() + 40 }}>
+                                    <View style={{ marginTop: 20 }}>
                                         <View View style={gStyles.textContainer}>
                                             <Text style={gStyles.title}>Alugue um Armário</Text>
                                             <Text style={[gStyles.subtitle]}>Selecione o armário que você deseja.</Text>

@@ -1,4 +1,4 @@
-const THEME = {
+const LIGHT = {
     COLORS: {
         BACKGROUND: '#FFFFFF',
 
@@ -26,4 +26,4 @@ const THEME = {
     },
 };
 
-export default THEME;
+export default LIGHT;

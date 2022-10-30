@@ -1,7 +1,9 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Animated, BackHandler, Dimensions, Image, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Cube } from 'phosphor-react-native';
 import DefaultProfilePicture from '../../assets/DefaultProfilePicture.jpg';
 import LockerImage from '../../assets/LockerImage.png';
 import NoLockersFounded from '../../assets/NoLockersFounded.png';
@@ -10,6 +12,7 @@ import gStyles from '../../components/gStyles';
 import useUser from '../../hooks/useUser';
 import api from '../../services/api';
 import styles from './styles';
+import DEFAULT from '../../theme/default';
 
 export default function ProfileScreen() {
     const navigation = useNavigation();
@@ -101,6 +104,13 @@ export default function ProfileScreen() {
     useEffect(() => {
         navigation.setOptions({ headerShown: true });
         BackHandler.addEventListener('hardwareBackPress', backAction);
+        navigation.setOptions({
+            headerTitleStyle: {
+                fontFamily: DEFAULT.FONT_FAMILY.BOLD,
+                color: DEFAULT.COLORS.WHITE,
+                fontSize: DEFAULT.FONT_SIZE.MD,
+            },
+        });
         return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
     }, []);
 
@@ -186,10 +196,7 @@ export default function ProfileScreen() {
                             : (
                                 <>
                                     <TouchableOpacity onPress={() => { navigation.navigate('ConfigurationScreen'); }} activeOpacity={0.8} style={styles.imageU2}>
-                                        <MaterialIcons
-                                            name="settings"
-                                            size={28}
-                                        />
+                                        <MaterialIcons name="gear" size={32} />
                                     </TouchableOpacity>
 
                                     <View style={styles.user}>

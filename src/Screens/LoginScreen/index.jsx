@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, BackHandler, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
@@ -18,6 +19,9 @@ import styles from './styles';
 
 import MyLockerLogo from '../../assets/MyLockerLogo.png';
 import MyLockerLogoPaintedWhite from '../../assets/MyLockerLogoPaintedWhite.png';
+import globalStyles from '../../styles/globalStyles';
+import authStyles from '../../styles/authStyles';
+import DEFAULT from '../../theme/default';
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -154,7 +158,25 @@ export default function LoginScreen() {
     }, []);
 
     useEffect(() => {
+        if (loginWithEmailSucceed) {
+            navigation.setOptions({
+                headerLeft: () => (
+                    <TouchableOpacity onPress={() => { setLoginWithEmailSucceed(false); }} activeOpacity={0.8} style={{ marginLeft: '8%', marginTop: '16%' }}>
+                        <MaterialIcons
+                            name="keyboard-arrow-left"
+                            size={52}
+                            color={DEFAULT.COLORS.BLUE.MEDIUM}
+                        />
+                    </TouchableOpacity>
+                ),
+            });
+        } else {
+            navigation.setOptions({
+                headerLeft: () => (null),
+            });
+        }
         BackHandler.addEventListener('hardwareBackPress', backAction);
+
         return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
     }, [loginWithEmailSucceed]);
 
@@ -170,93 +192,56 @@ export default function LoginScreen() {
             <KeyboardAvoidingView behavior="height">
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
                     <ScrollView bounces={false}>
-
-                        {
-                            !loginWithEmailSucceed
-                                ? (
-                                    <View style={[gStyles.container, { height: containerHeight }]}>
-
-                                        <View style={gStyles.imageContainer}>
-                                            <Image source={!darkTheme ? MyLockerLogo : MyLockerLogoPaintedWhite} style={gStyles.image} />
-                                        </View>
-
-                                        <View style={{ width: '100%' }}>
-                                            <View style={[gStyles.textContainer, { marginBottom: 40 }]}>
-                                                <Text style={gStyles.title}>Entrar</Text>
-                                                <Text style={gStyles.subtitle}>Digite seu e-mail da Unicamp</Text>
-                                            </View>
-                                            <View style={{ width: '100%' }}>
-                                                <TextInput style={styles.input} value={email} placeholder="E-mail Institucional" placeholderTextColor="#7D7B7B" onChangeText={(text) => setEmail(text)} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
-                                                <TouchableOpacity style={gStyles.linkContainer} onPress={forgotEmailToast}>
-                                                    <Text style={gStyles.linkText}>Esqueceu seu e-mail?</Text>
+                        <View style={[globalStyles.container, { height: containerHeight }]}>
+                            <View style={authStyles.logoContainer}>
+                                <Image source={darkTheme ? MyLockerLogoPaintedWhite : MyLockerLogo} style={globalStyles.image} />
+                            </View>
+                            <View style={globalStyles.fullWidth}>
+                                <View style={authStyles.textContainer}>
+                                    <Text style={authStyles.title}>Entrar</Text>
+                                    <Text style={authStyles.subtitle}>{loginWithEmailSucceed ? 'Digite sua senha para fazer login' : 'Digite seu e-mail da Unicamp'}</Text>
+                                </View>
+                                <View style={globalStyles.fullWidth}>
+                                    {loginWithEmailSucceed ? (
+                                        <>
+                                            <TextInput style={[styles.input, styles.inputDisable]} value={email} editable={false} selectTextOnFocus={false} placeholder="E-mail" placeholderTextColor="#7D7B7B" />
+                                            <View style={authStyles.inputArea}>
+                                                <TextInput style={authStyles.passwordInput} value={password} placeholder="Senha" placeholderTextColor="#7D7B7B" onChangeText={(text) => setPassword(text)} secureTextEntry={hidePassword} blurOnSubmit={false} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
+                                                <TouchableOpacity onPress={() => setHidePassword(!hidePassword)}>
+                                                    {hidePassword
+                                                        ? <MaterialIcons name="visibility" color={DEFAULT.COLORS.GRAY.MEDIUM} size={25} />
+                                                        : <MaterialIcons name="visibility-off" color={DEFAULT.COLORS.GRAY.MEDIUM} size={25} />}
                                                 </TouchableOpacity>
                                             </View>
-                                        </View>
-
-                                        <View style={gStyles.buttonContainer}>
-                                            <Button press={handleEmailVerification} disabled={!!loading}>
-                                                <View style={{ height: 30 }}>
-                                                    {loading ? <ActivityIndicator size="large" color="white" /> : (
-                                                        <Text style={gStyles.textButton}>Continuar</Text>
-                                                    )}
-                                                </View>
-                                            </Button>
-                                        </View>
+                                            <TouchableOpacity
+                                                style={authStyles.linkContainer}
+                                                onPress={() => {
+                                                    navigation.navigate('VerifyEmailScreen');
+                                                }}
+                                            >
+                                                <Text style={authStyles.linkText} onPress={() => { navigation.navigate('ForgotPasswordScreen'); }}>Esqueceu sua senha?</Text>
+                                            </TouchableOpacity>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <TextInput style={authStyles.input} value={email} placeholder="E-mail Institucional" placeholderTextColor="#7D7B7B" onChangeText={(text) => setEmail(text)} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
+                                            <TouchableOpacity style={authStyles.linkContainer} onPress={forgotEmailToast}>
+                                                <Text style={authStyles.linkText}>Esqueceu seu e-mail?</Text>
+                                            </TouchableOpacity>
+                                        </>
+                                    )}
+                                </View>
+                            </View>
+                            <View style={globalStyles.buttonContainer}>
+                                <Button press={loginWithEmailSucceed ? handlePasswordVerification : handleEmailVerification} disabled={!!loading}>
+                                    <View style={globalStyles.buttonContent}>
+                                        {loading
+                                            ? <ActivityIndicator size="large" color="white" />
+                                            : <Text style={globalStyles.textButton}>Continuar</Text>}
                                     </View>
-                                )
-                                : (
-                                    <View style={[gStyles.container, { height: containerHeight }]}>
-                                        <TouchableOpacity onPress={() => { setLoginWithEmailSucceed(false); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                            <MaterialIcons
-                                                name="keyboard-arrow-left"
-                                                color="#0085FF"
-                                                size={49}
-                                            />
-                                        </TouchableOpacity>
-
-                                        <View style={gStyles.imageContainer}>
-                                            <Image source={MyLockerLogo} style={gStyles.image} />
-                                        </View>
-
-                                        <View style={{ width: '100%' }}>
-                                            <View style={[gStyles.textContainer, { marginBottom: 40 }]}>
-                                                <Text style={gStyles.title}>Entrar</Text>
-                                                <Text style={gStyles.subtitle}>Digite sua senha para fazer login</Text>
-                                            </View>
-                                            <View style={{ width: '100%' }}>
-                                                <TextInput style={[styles.input, styles.inputDisable]} value={email} editable={false} selectTextOnFocus={false} placeholder="E-mail" placeholderTextColor="#7D7B7B" />
-                                                <View style={gStyles.inputArea}>
-                                                    <TextInput style={gStyles.passwordInput} value={password} placeholder="Senha" placeholderTextColor="#7D7B7B" onChangeText={(text) => setPassword(text)} secureTextEntry={hidePassword} blurOnSubmit={false} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
-                                                    <TouchableOpacity onPress={() => setHidePassword(!hidePassword)}>
-                                                        {hidePassword
-                                                            ? <MaterialIcons name="visibility" color="#000" size={25} />
-                                                            : <MaterialIcons name="visibility-off" color="#000" size={25} />}
-                                                    </TouchableOpacity>
-                                                </View>
-                                                <TouchableOpacity
-                                                    style={gStyles.linkContainer}
-                                                    onPress={() => {
-                                                        navigation.navigate('VerifyEmailScreen');
-                                                    }}
-                                                >
-                                                    <Text style={gStyles.linkText} onPress={() => { navigation.navigate('ForgotPasswordScreen'); }}>Esqueceu sua senha?</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-
-                                        <View style={gStyles.buttonContainer}>
-                                            <Button press={handlePasswordVerification} disabled={!!loading}>
-                                                <View style={{ height: 30 }}>
-                                                    {loading
-                                                        ? <ActivityIndicator size="large" color="white" />
-                                                        : <Text style={gStyles.textButton}>Continuar</Text>}
-                                                </View>
-                                            </Button>
-                                        </View>
-                                    </View>
-                                )
-                        }
-
+                                </Button>
+                            </View>
+                        </View>
                     </ScrollView>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>

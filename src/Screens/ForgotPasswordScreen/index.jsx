@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, BackHandler, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useToast } from 'react-native-toast-notifications';
+import { Cube } from 'phosphor-react-native';
 import MyLockerLogo from '../../assets/MyLockerLogo.png';
 import Button from '../../components/Button';
 import gStyles from '../../components/gStyles';
@@ -64,6 +65,17 @@ export default function ForgotPasswordScreen() {
         );
 
         BackHandler.addEventListener('hardwareBackPress', backAction);
+        navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => { navigation.navigate('LoginScreen'); }} activeOpacity={0.8}>
+                    <MaterialIcons
+                        name="arrow-back"
+                        size={40}
+                        color="blue"
+                    />
+                </TouchableOpacity>
+            ),
+        });
 
         return () => {
             keyboardDidHideListener.remove();
