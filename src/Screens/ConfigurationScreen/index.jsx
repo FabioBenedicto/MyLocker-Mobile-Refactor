@@ -3,10 +3,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
+import mime from 'mime';
 import { useEffect, useState } from 'react';
-import { Image, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Switch, Text, TouchableOpacity, View, Platform } from 'react-native';
 import DefaultProfilePicture from '../../assets/DefaultProfilePicture.jpg';
 import gStyles from '../../components/gStyles';
+
 import useDarkTheme from '../../hooks/useDarkTheme';
 import useUser from '../../hooks/useUser';
 import api from '../../services/api';
@@ -35,10 +37,36 @@ export default function ConfigurationScreen() {
     };
 
     const handleUploadImage = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync();
-    };
+        const result = await ImagePicker.launchImageLibraryAsync({});
+        const { uri } = result;
+        const name = uri.split('/').pop();
 
-    const [fileResponse, setFileResponse] = useState([]);
+        const photo = {
+            uri,
+            type: mime.getType(uri),
+            name,
+        };
+
+        const formData = new FormData();
+        formData.append('profile', photo);
+        formData.append('ra', user.ra);
+
+        api
+            .post('/uploadImage', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true,
+            })
+            .then((res) => {
+                setUser(res.data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setLoading(false);
+                console.log(err.response.data.erro);
+            });
+    };
 
     const handleUploadDocument = async () => {
         DocumentPicker.getDocumentAsync();
@@ -50,7 +78,6 @@ export default function ConfigurationScreen() {
                 fontFamily: DEFAULT.FONT_FAMILY.BOLD,
                 color: DEFAULT.COLORS.WHITE,
                 fontSize: DEFAULT.FONT_SIZE.MD,
-                // textAlign: 'center',
             },
             headerLeft: () => (
                 <TouchableOpacity onPress={() => { navigation.navigate('ProfileScreen'); }} activeOpacity={0.8}>

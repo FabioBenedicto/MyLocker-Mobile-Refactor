@@ -10,6 +10,9 @@ import useLocker from '../../hooks/useLocker';
 import useUser from '../../hooks/useUser';
 import api from '../../services/api';
 import styles from './styles';
+import DEFAULT from '../../theme/default';
+import globalStyles from '../../styles/globalStyles';
+import appStyles from '../../styles/appStyles';
 
 export default function PaymentScreen() {
     const navigation = useNavigation();
@@ -86,30 +89,34 @@ export default function PaymentScreen() {
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', backAction);
         console.log(locker.number);
-
+        navigation.setOptions({
+            headerTitleStyle: {
+                fontFamily: DEFAULT.FONT_FAMILY.BOLD,
+                color: DEFAULT.COLORS.WHITE,
+                fontSize: DEFAULT.FONT_SIZE.MD,
+            },
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => { navigation.navigate('ProfileScreen'); }} activeOpacity={0.8}>
+                    <MaterialIcons
+                        name="keyboard-arrow-left"
+                        size={52}
+                        color={DEFAULT.COLORS.WHITE}
+                    />
+                </TouchableOpacity>
+            ),
+        });
         return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
     }, []);
 
     return (
         <ScrollView>
-            <View style={gStyles.container}>
-
-                <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                    <MaterialIcons
-                        name="keyboard-arrow-left"
-                        color="#0085FF"
-                        size={49}
-                    />
-                </TouchableOpacity>
-
-                <View style={{ marginTop: getStatusBarHeight() + 40 }}>
-                    <View style={gStyles.textContainer}>
-                        <Text style={[gStyles.title, { fontFamily: 'Roboto-Medium' }]}>Alugue um Armário</Text>
-                        <Text style={gStyles.subtitle}>Revise seu pedido e realize o pagamento</Text>
-                    </View>
+            <View style={globalStyles.container}>
+                <View style={[gStyles.textContainer, styles.spacing]}>
+                    <Text style={appStyles.title}>Alugue um Armário</Text>
+                    <Text style={appStyles.subtitle}>Revise seu pedido e realize o pagamento</Text>
                 </View>
 
-                <View style={[styles.lockerContainer, { marginTop: 40 }]}>
+                <View style={[styles.lockerContainer, styles.spacing]}>
                     <View style={styles.lockerHeader}>
 
                         <Image source={LockerImage} style={{ backgroundColor: locker.section.color }} />
@@ -120,58 +127,31 @@ export default function PaymentScreen() {
                         </View>
 
                     </View>
+                    <View style={gStyles.lockerInfo}>
 
-                    <View style={styles.lockerMain}>
-
-                        {/* <View style={styles.lineInfo}>
-                        <Text style={styles.infoText}>Andar:</Text>
-                        <Text style={[styles.infoText, { color: '#535353' }]}>Segundo</Text>
-                    </View>
-
-                    <View style={styles.lineInfo}>
-                        <Text style={styles.infoText}>Cor:</Text>
-                        <View style={styles.colorContent}>
-                            <Text style={[styles.infoText, { color: '#535353' }]}>{transformHexToPlainText(locker.section.color)}</Text>
-                            <View style={[gStyles.color, { backgroundColor: locker.section.color }]} />
-                        </View>
-                    </View>
-
-                    <View style={styles.lineInfo}>
-                        <Text style={styles.infoText}>À esquerda:</Text>
-                        <Text style={[styles.infoText, { color: '#535353' }]}>{locker.section.left_room}</Text>
-                    </View>
-
-                    <View style={styles.lineInfo}>
-                        <Text style={styles.infoText}>À direita:</Text>
-                        <Text style={[styles.infoText, { color: '#535353' }]}>{locker.section.right_room}</Text>
-    </View> */}
-                        <View style={gStyles.lockerInfo}>
-
-                            <View>
-                                <Text style={gStyles.lockerInfoLabel}>Número:</Text>
-                                <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={locker.number.toString()} editable={false} />
-                            </View>
-
-                            <View>
-                                <Text style={gStyles.lockerInfoLabel}>Andar:</Text>
-                                <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value="" editable={false} />
-                            </View>
-
-                            <View>
-                                <Text style={gStyles.lockerInfoLabel}>Cor: </Text>
-                                <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={transformHexToPlainText(locker.section.color)} editable={false} />
-                            </View>
-                            <View>
-                                <Text style={gStyles.lockerInfoLabel}>À Esquerda:</Text>
-                                <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={locker.section.left_room.toString()} editable={false} />
-                            </View>
-
-                            <View>
-                                <Text style={gStyles.lockerInfoLabel}>À Direita:</Text>
-                                <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={locker.section.right_room.toString()} editable={false} />
-                            </View>
+                        <View>
+                            <Text style={gStyles.lockerInfoLabel}>Número:</Text>
+                            <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={locker.number.toString()} editable={false} />
                         </View>
 
+                        <View>
+                            <Text style={gStyles.lockerInfoLabel}>Andar:</Text>
+                            <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value="" editable={false} />
+                        </View>
+
+                        <View>
+                            <Text style={gStyles.lockerInfoLabel}>Cor: </Text>
+                            <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={transformHexToPlainText(locker.section.color)} editable={false} />
+                        </View>
+                        <View>
+                            <Text style={gStyles.lockerInfoLabel}>À Esquerda:</Text>
+                            <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={locker.section.left_room.toString()} editable={false} />
+                        </View>
+
+                        <View>
+                            <Text style={gStyles.lockerInfoLabel}>À Direita:</Text>
+                            <TextInput style={[gStyles.lockerInfoinput, gStyles.disabled]} value={locker.section.right_room.toString()} editable={false} />
+                        </View>
                     </View>
 
                 </View>

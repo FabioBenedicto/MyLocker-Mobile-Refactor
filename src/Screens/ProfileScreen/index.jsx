@@ -3,7 +3,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Animated, BackHandler, Dimensions, Image, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { Cube } from 'phosphor-react-native';
 import DefaultProfilePicture from '../../assets/DefaultProfilePicture.jpg';
 import LockerImage from '../../assets/LockerImage.png';
 import NoLockersFounded from '../../assets/NoLockersFounded.png';
@@ -13,6 +12,8 @@ import useUser from '../../hooks/useUser';
 import api from '../../services/api';
 import styles from './styles';
 import DEFAULT from '../../theme/default';
+import appStyles from '../../styles/appStyles';
+import globalStyles from '../../styles/globalStyles';
 
 export default function ProfileScreen() {
     const navigation = useNavigation();
@@ -46,6 +47,17 @@ export default function ProfileScreen() {
         } else {
             setLoadingLocker(false);
         }
+    };
+
+    const handleLogout = () => {
+        api.get('/logout/students', { withCredentials: true }).then(() => {
+            setUser({
+                ra: '',
+                first_name: '',
+                last_name: '',
+                email: '',
+            });
+        });
     };
 
     const anStart = () => {
@@ -87,6 +99,7 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         loadLocker();
+        console.log(user.profile_picture_url);
     }, [user]);
 
     const backAction = () => {
@@ -115,8 +128,7 @@ export default function ProfileScreen() {
     }, []);
 
     return (
-        <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={80} style={styles.container}>
-
+        <View style={appStyles.container}>
             <Modal visible={modV} transparent animationType="none">
 
                 <TouchableOpacity style={gStyles.background} onPress={() => setModV(false)} />
@@ -183,81 +195,58 @@ export default function ProfileScreen() {
 
             </Modal>
 
-            <View style={[styles.container]}>
+            <View>
                 <View style={[styles.header, { backgroundColor: studentLocker == null ? '#D1D1D1' : studentLocker.section.color }]}>
-
-                    {
-                        loadingLocker
-                            ? (
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <ActivityIndicator size="large" color="black" />
-                                </View>
-                            )
-                            : (
-                                <>
-                                    <TouchableOpacity onPress={() => { navigation.navigate('ConfigurationScreen'); }} activeOpacity={0.8} style={styles.imageU2}>
-                                        <MaterialIcons name="gear" size={32} />
-                                    </TouchableOpacity>
-
-                                    <View style={styles.user}>
-                                        <Image style={styles.imageU} source={!user.profile_picture_url ? DefaultProfilePicture : { uri: user.profile_picture_url }} />
-
-                                        <View style={styles.textContainer}>
-                                            <Text style={styles.firstName}>{!user.ra ? 'Nome Sobrenome' : `${user.first_name} ${user.last_name}`}</Text>
-                                            <Text style={styles.lastName}>{!user.ra ? 'clXXXXXX@g.unicamp.br' : user.email}</Text>
-                                        </View>
-                                    </View>
-                                </>
-                            )
-                    }
-
+                    <TouchableOpacity onPress={() => { navigation.navigate('ConfigurationScreen'); }} activeOpacity={0.8} style={styles.settingsButton}>
+                        <MaterialIcons name="settings" size={25} />
+                    </TouchableOpacity>
                 </View>
 
-                <View style={styles.body}>
-
-                    <View style={styles.yourLocker}>
-                        <Text style={styles.title}>Meu Armário</Text>
-                        <View style={[gStyles.line, { marginTop: 10 }]} />
-
-                        {
-                            // eslint-disable-next-line no-nested-ternary
-                            loadingLocker ? (
-                                <View style={{ marginTop: 35, alignSelf: 'center' }}>
-                                    <ActivityIndicator size="large" color="black" />
-                                </View>
-                            )
-                                : user.locker_number ? (
-                                    <TouchableOpacity onPress={() => anStart()} style={styles.lockerContainer}>
-                                        <View style={styles.lockerContainer2}>
-
-                                            <View style={[styles.lockerImageContainer, { backgroundColor: studentLocker == null ? '' : studentLocker.section.color }]}>
-                                                <Image source={LockerImage} style={styles.lockerImage} />
-                                            </View>
-
-                                            <View style={styles.smallTextContainer}>
-                                                <Text style={styles.smallTitle}>Armário {studentLocker == null ? '000' : studentLocker.number}</Text>
-                                                <Text style={[styles.smallSubtitle, { color: '#535353' }]}>{studentLocker == null ? 'Alugado em dia/mês/ano' : `Alugado em ${studentLocker.rentedAt.split('-', 2)[0]}`}</Text>
-                                            </View>
-
-                                        </View>
-
-                                    </TouchableOpacity>
-                                ) : (
-
-                                    <View style={styles.nolockerContainer}>
-                                        <Image style={styles.image} source={NoLockersFounded} />
-                                        <Text style={styles.text}>Nenhum armário alugado</Text>
-                                    </View>
-                                )
-                        }
+                <View style={styles.user}>
+                    <Image style={styles.userImage} source={user.profile_picture_url ? { uri: user.profile_picture_url } : DefaultProfilePicture} />
+                    <View style={styles.userInformation}>
+                        <Text style={styles.firstName}>{user.ra ? `${user.first_name} ${user.last_name}` : 'Nome Sobrenome' }</Text>
+                        <Text style={styles.lastName}>{user.ra ? user.email : 'clXXXXXX@g.unicamp.br' }</Text>
                     </View>
                 </View>
-                <View style={[gStyles.buttonContainer, { paddingHorizontal: '10%' }]}>
-                    <Button press={() => { navigation.navigate('RentLockerScreen'); }}>
-                        <Text style={gStyles.textButton}>Alugar um Armário</Text>
-                    </Button>
-                </View>
             </View>
-        </KeyboardAvoidingView>
+
+            <View style={styles.body}>
+                <Text style={styles.title}>Meu Armário</Text>
+                <View style={[gStyles.line, { marginTop: 10, marginBottom: 20 }]} />
+
+                {
+                    user.locker_number ? (
+                        <TouchableOpacity onPress={() => anStart()} style={styles.lockerContainer}>
+                            <View style={styles.lockerContainer2}>
+
+                                <View style={[styles.lockerImageContainer, { backgroundColor: studentLocker == null ? '' : studentLocker.section.color }]}>
+                                    <Image source={LockerImage} style={styles.lockerImage} />
+                                </View>
+
+                                <View style={styles.smallTextContainer}>
+                                    <Text style={styles.smallTitle}>Armário {studentLocker == null ? '000' : studentLocker.number}</Text>
+                                    <Text style={[styles.smallSubtitle, { color: '#535353' }]}>{studentLocker == null ? 'Alugado em dia/mês/ano' : `Alugado em ${studentLocker.rentedAt.split('-', 2)[0]}`}</Text>
+                                </View>
+
+                            </View>
+
+                        </TouchableOpacity>
+                    ) : (
+
+                        <View style={styles.noLockerContainer}>
+                            <Image style={styles.image} source={NoLockersFounded} />
+                            <Text style={styles.noLockerText}>Nenhum armário alugado</Text>
+                        </View>
+                    )
+                }
+            </View>
+
+            <View style={[gStyles.buttonContainer, { paddingHorizontal: '10%' }]}>
+                <Button press={() => { navigation.navigate('RentLockerScreen'); }}>
+                    <Text style={gStyles.textButton}>Alugar um Armário</Text>
+                </Button>
+            </View>
+        </View>
     );
 }

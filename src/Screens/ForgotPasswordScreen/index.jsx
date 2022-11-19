@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, BackHandler, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useToast } from 'react-native-toast-notifications';
-import { Cube } from 'phosphor-react-native';
 import MyLockerLogo from '../../assets/MyLockerLogo.png';
 import Button from '../../components/Button';
-import gStyles from '../../components/gStyles';
 import useUser from '../../hooks/useUser';
+import authStyles from '../../styles/authStyles';
 
 import api from '../../services/api';
+import globalStyles from '../../styles/globalStyles';
 
 export default function ForgotPasswordScreen() {
     const navigation = useNavigation();
@@ -63,7 +63,6 @@ export default function ForgotPasswordScreen() {
                 setKeyboardVisible(false); // or some other action
             },
         );
-
         BackHandler.addEventListener('hardwareBackPress', backAction);
         navigation.setOptions({
             headerLeft: () => (
@@ -76,7 +75,6 @@ export default function ForgotPasswordScreen() {
                 </TouchableOpacity>
             ),
         });
-
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
@@ -96,7 +94,7 @@ export default function ForgotPasswordScreen() {
             <KeyboardAvoidingView behavior="height">
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
                     <ScrollView bounces={false}>
-                        <View style={[gStyles.container, { height: containerHeight }]}>
+                        <View style={[authStyles.container, { height: containerHeight }]}>
                             <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
                                 <MaterialIcons
                                     name="keyboard-arrow-left"
@@ -104,27 +102,24 @@ export default function ForgotPasswordScreen() {
                                     size={49}
                                 />
                             </TouchableOpacity>
-
-                            <View style={gStyles.imageContainer}>
-                                <Image source={MyLockerLogo} style={gStyles.image} />
+                            <View style={authStyles.logoContainer}>
+                                <Image source={MyLockerLogo} style={globalStyles.image} />
                             </View>
-
-                            <View style={{ width: '100%' }}>
-                                <View style={[gStyles.textContainer, { marginBottom: 40 }]}>
-                                    <Text style={gStyles.title}>Entrar</Text>
-                                    <Text style={gStyles.subtitle}>Digite seu e-mail da Unicamp</Text>
+                            <View style={globalStyles.fullWidth}>
+                                <View style={authStyles.textContainer}>
+                                    <Text style={authStyles.title}>Entrar</Text>
+                                    <Text style={authStyles.subtitle}>Digite seu e-mail da Unicamp</Text>
                                 </View>
-                                <View style={{ width: '100%' }}>
-                                    <TextInput style={gStyles.input} value={email} placeholder="E-mail Institucional" placeholderTextColor="#7D7B7B" onChangeText={(text) => setEmail(text)} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
+                                <View style={globalStyles.fullWidth}>
+                                    <TextInput style={authStyles.input} value={email} placeholder="E-mail Institucional" placeholderTextColor="#7D7B7B" onChangeText={(text) => setEmail(text)} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
                                 </View>
                             </View>
-
-                            <View style={gStyles.buttonContainer}>
+                            <View style={globalStyles.buttonContainer}>
                                 <Button press={handleEmailInput} disabled={!!loading}>
                                     <View style={{ height: 30 }}>
                                         {loading
                                             ? <ActivityIndicator size="large" color="white" />
-                                            : <Text style={gStyles.textButton}>Continuar</Text>}
+                                            : <Text style={globalStyles.textButton}>Continuar</Text>}
                                     </View>
                                 </Button>
                             </View>

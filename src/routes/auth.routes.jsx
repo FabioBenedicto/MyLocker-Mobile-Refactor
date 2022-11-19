@@ -17,20 +17,12 @@ export default function AuthRoutes() {
         <Navigator
             initialRouteName="LoginScreen"
             screenOptions={{
-                headerShown: true,
+                headerShown: false,
                 headerTransparent: true,
-                headerStyle: {
-                    backgroundColor: DEFAULT.COLORS.WHITE,
-                },
                 headerShadowVisible: false,
                 cardStyle: {
                     backgroundColor: darkTheme ? DARK.COLORS.BACKGROUND : LIGHT.COLORS.BACKGROUND,
                 },
-                headerBackTitleVisible: false,
-                headerTitleStyle: {
-                    fontSize: 0,
-                },
-
             }}
         >
 

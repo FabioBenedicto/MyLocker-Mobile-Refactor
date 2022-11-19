@@ -17,6 +17,7 @@ import useLocker from '../../hooks/useLocker';
 import api from '../../services/api';
 import styles from './styles';
 import DEFAULT from '../../theme/default';
+import appSyles from '../../styles/appStyles';
 
 export default function LockersMap() {
     const navigation = useNavigation();
@@ -286,11 +287,9 @@ export default function LockersMap() {
     };
 
     return (
-        <View style={[styles.container]}>
+        <View style={appSyles.container}>
             <Modal visible={modV} transparent animationType="none">
-
                 <TouchableOpacity style={gStyles.background} onPress={() => setModV(false)} />
-
                 <Animated.View style={[gStyles.modalContainer, anV.getLayout()]}>
                     <View>
 
@@ -362,11 +361,6 @@ export default function LockersMap() {
                                         </View>
                                     </View>
 
-                                    {/* {
-                                !lockersReady ?
-
-                            } */}
-
                                     <FlatList
                                         style={[styles.flatlist]}
                                         data={mapLocker[floor - 1]}
@@ -405,64 +399,60 @@ export default function LockersMap() {
                             )
                     )
                     : (
-                        lockersSectionChoosedOrdened == [] ? <Loading />
-                            : (
-                                <>
-                                    <View style={{ marginTop: 20 }}>
-                                        <View View style={gStyles.textContainer}>
-                                            <Text style={gStyles.title}>Alugue um Armário</Text>
-                                            <Text style={[gStyles.subtitle]}>Selecione o armário que você deseja.</Text>
-                                        </View>
-                                    </View>
+                        <>
+                            <View style={{ marginTop: 20 }}>
+                                <View View style={gStyles.textContainer}>
+                                    <Text style={gStyles.title}>Alugue um Armário</Text>
+                                    <Text style={[gStyles.subtitle]}>Selecione o armário que você deseja.</Text>
+                                </View>
+                            </View>
 
-                                    <FlatList
-                                        style={[styles.flatlist]}
-                                        data={lockersSectionChoosedOrdened[page]}
-                                        columnWrapperStyle={styles.row}
-                                        key="_"
-                                        numColumns={4}
-                                        renderItem={({ item }) => (
-                                            <View>
-                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[0]); console.log(arrowRightEnabled); }} style={styles.flatData}>
-                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[0].section.color }]} resizeMode="contain" />
-                                                </TouchableOpacity>
-                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[1]); }} style={styles.flatData}>
-                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[1].section.color }]} resizeMode="contain" />
-                                                </TouchableOpacity>
-                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[2]); }} style={styles.flatData}>
-                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[2].section.color }]} resizeMode="contain" />
-                                                </TouchableOpacity>
-                                                <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[3]); }} style={styles.flatData}>
-                                                    <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[3].section.color }]} resizeMode="contain" />
-                                                </TouchableOpacity>
-                                            </View>
-                                        )}
+                            <FlatList
+                                style={[styles.flatlist]}
+                                data={lockersSectionChoosedOrdened[page]}
+                                columnWrapperStyle={styles.row}
+                                key="_"
+                                numColumns={4}
+                                renderItem={({ item }) => (
+                                    <View>
+                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[0]); console.log(arrowRightEnabled); }} style={styles.flatData}>
+                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[0].section.color }]} resizeMode="contain" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[1]); }} style={styles.flatData}>
+                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[1].section.color }]} resizeMode="contain" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[2]); }} style={styles.flatData}>
+                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[2].section.color }]} resizeMode="contain" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { anStart(); setLockerModal(item[3]); }} style={styles.flatData}>
+                                            <Image source={LockerImage} style={[styles.lockerImageL, { backgroundColor: item[3].section.color }]} resizeMode="contain" />
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />
+                            <View style={styles.navLockers}>
+                                <TouchableOpacity onPress={back} disabled={!arrowLeftEnabled}>
+                                    <MaterialIcons
+                                        name="keyboard-arrow-left"
+                                        color={arrowLeftEnabled ? '#000000' : '#7D7B7B'}
+                                        size={64}
                                     />
-                                    <View style={styles.navLockers}>
-                                        <TouchableOpacity onPress={back} disabled={!arrowLeftEnabled}>
-                                            <MaterialIcons
-                                                name="keyboard-arrow-left"
-                                                color={arrowLeftEnabled ? '#000000' : '#7D7B7B'}
-                                                size={64}
-                                            />
-                                        </TouchableOpacity>
-                                        <Text style={gStyles.title}>{page + 1}</Text>
-                                        <Text style={gStyles.title}> / </Text>
-                                        <Text style={gStyles.title}>{howManyPages + 1}</Text>
+                                </TouchableOpacity>
+                                <Text style={gStyles.title}>{page + 1}</Text>
+                                <Text style={gStyles.title}> / </Text>
+                                <Text style={gStyles.title}>{howManyPages + 1}</Text>
 
-                                        <TouchableOpacity onPress={go} disabled={!arrowRightEnabled}>
-                                            <MaterialIcons
-                                                name="keyboard-arrow-right"
-                                                color={arrowRightEnabled ? '#000000' : '#7D7B7B'}
-                                                size={64}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </>
-                            )
+                                <TouchableOpacity onPress={go} disabled={!arrowRightEnabled}>
+                                    <MaterialIcons
+                                        name="keyboard-arrow-right"
+                                        color={arrowRightEnabled ? '#000000' : '#7D7B7B'}
+                                        size={64}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </>
                     )
             }
-
         </View>
     );
 }

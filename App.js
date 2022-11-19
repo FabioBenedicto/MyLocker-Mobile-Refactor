@@ -46,7 +46,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <DarkThemeContextProvider>
-                <ToastProvider placement="top" animationType="slide-in" offsetTop={80} textStyle={{ textAlign: 'center' }}>
+                <ToastProvider placement="top" animationType="slide-in" offsetTop={getStatusBarHeight() + 20} textStyle={{ textAlign: 'center' }}>
                     <UserContextProvider>
                         <LockerContextProvider>
                             <StatusBar

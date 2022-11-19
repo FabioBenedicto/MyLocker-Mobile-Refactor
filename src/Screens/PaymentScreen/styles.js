@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    spacing: {
+        marginTop: 40,
+    },
     textContainer: {
         marginTop: 40,
         marginBottom: 40,
@@ -13,6 +16,9 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         padding: 30,
         marginHorizontal: 30,
+    },
+    title: {
+
     },
 
     lockerHeader: {

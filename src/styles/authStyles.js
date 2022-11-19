@@ -3,6 +3,12 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import DEFAULT from '../theme/default';
 
 const authStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: '4%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     logoContainer: {
         marginTop: 150,
         width: '100%',

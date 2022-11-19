@@ -17,7 +17,12 @@ const globalStyles = StyleSheet.create({
     fullWidth: {
         width: '100%',
     },
-
+    spacingTop: {
+        marginTop: 40,
+    },
+    spacingBottom: {
+        marginBottom: 40,
+    },
     buttonContainer: {
         width: '100%',
         paddingHorizontal: '4%',
