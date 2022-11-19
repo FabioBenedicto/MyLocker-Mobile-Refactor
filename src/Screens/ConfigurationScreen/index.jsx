@@ -121,7 +121,7 @@ export default function ConfigurationScreen() {
                     <MaterialIcons name="chevron-right" size={THEME.FONT_SIZE.LG} />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.8} onPress={handleUploadDocument} style={{ height: 80, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => { navigation.navigate('ApmScreen'); }} style={{ height: 80, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                         <MaterialIcons name="note-add" size={THEME.FONT_SIZE.LG} style={{ marginRight: 4 }} />
                         <Text style={{ fontSize: THEME.FONT_SIZE.MD, fontFamily: THEME.FONT_FAMILY.REGULAR }}>
