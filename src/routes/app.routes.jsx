@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ConfigurationScreen from '../Screens/ConfigurationScreen';
+import ApmScreen from '../Screens/ApmScreen';
 import PaymentScreen from '../Screens/PaymentScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 import RentLockerScreen from '../Screens/RentLockerScreen';
@@ -35,6 +36,7 @@ export default function AppRoutes() {
             <Screen name="RentLockerScreen" component={RentLockerScreen} />
             <Screen name="PaymentScreen" component={PaymentScreen} />
             <Screen name="ConfigurationScreen" component={ConfigurationScreen} options={{ title: 'Configurações' }} />
+            <Screen name="ApmScreen" component={ApmScreen} options={{ title: 'APM' }} />
 
         </Navigator>
     );
