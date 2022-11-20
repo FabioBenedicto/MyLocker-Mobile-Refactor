@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
+const teste = 0;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: '5%',
-
     },
     imageContainer: {
         marginTop: getStatusBarHeight() + 1020,

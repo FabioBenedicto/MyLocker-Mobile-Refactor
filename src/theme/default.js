@@ -20,14 +20,6 @@ const DEFAULT = {
 
         HEADER: '#002147',
         OVERLAY: 'rgba(0,0,0,0.6)',
-
-        /* medium-blue: #0085ff;
-      dark-blue: #002147;
-      light-gray: #f6f6f6;
-      medium-gray: #eee;
-      dark-yellow: #fdc800;
-      light-gray-text: #cdcdcd;
-      ; */
     },
 
     FONT_FAMILY: {

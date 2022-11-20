@@ -9,10 +9,16 @@ const authStyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    backContainer:{
+        alignSelf: 'flex-start',
+        position: 'absolute',
+        left: 4,
+        top: getStatusBarHeight() + 24,
+    },
     logoContainer: {
-        marginTop: 150,
         width: '100%',
         alignItems: 'center',
+        marginTop: 150,
     },
     textContainer: {
         justifyContent: 'center',

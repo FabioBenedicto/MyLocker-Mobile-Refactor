@@ -9,10 +9,16 @@ import useUser from '../../hooks/useUser';
 import api from '../../services/api';
 import authStyles from '../../styles/authStyles';
 import globalStyles from '../../styles/globalStyles';
+
 import styles from './styles';
+import useDarkTheme from '../../hooks/useDarkTheme';
+import DARK from '../../theme/dark';
+import LIGHT from '../../theme/light';
+import ShortLogoWhite from '../../assets/ShortLogoWhite.png';
 
 export default function VerifyEmailScreen() {
     const navigation = useNavigation();
+    const {darkTheme} = useDarkTheme();
     const { user, setUser } = useUser();
 
     const inputs = [createRef(), createRef(), createRef(), createRef(), createRef(), createRef()];
@@ -32,11 +38,11 @@ export default function VerifyEmailScreen() {
 
     const handleCodeSubmit = () => {
         const codeType = input1Value
-        + input2Value
-        + input3Value
-        + input4Value
-        + input5Value
-        + input6Value;
+            + input2Value
+            + input3Value
+            + input4Value
+            + input5Value
+            + input6Value;
         if (codeType == user.code) {
             toast.show('Verificação realizada com sucesso', { type: 'success' });
             setTimeout(() => {
@@ -136,7 +142,10 @@ export default function VerifyEmailScreen() {
                         <View style={[globalStyles.container, { height: containerHeight }]}>
 
                             <View style={authStyles.logoContainer}>
-                                <Image source={MyLockerLogo} style={globalStyles.image} />
+                                <Image
+                                    source={darkTheme ? ShortLogoWhite : MyLockerLogo}
+                                    style={globalStyles.image}
+                                />
                             </View>
 
                             <View style={globalStyles.fullWidth}>
@@ -146,12 +155,65 @@ export default function VerifyEmailScreen() {
                                 </View>
 
                                 <View style={styles.inputContainer}>
-                                    <TextInput style={[authStyles.input, styles.input]} ref={inputs[0]} maxLength={1} value={input1Value} onChangeText={(text) => setInput1Value(text)} onKeyPress={(e) => handleKeyPress(e, 0)} />
-                                    <TextInput style={[authStyles.input, styles.input]} ref={inputs[1]} maxLength={1} value={input2Value} onChangeText={(text) => setInput2Value(text)} onKeyPress={(e) => handleKeyPress(e, 1)} />
-                                    <TextInput style={[authStyles.input, styles.input]} ref={inputs[2]} maxLength={1} value={input3Value} onChangeText={(text) => setInput3Value(text)} onKeyPress={(e) => handleKeyPress(e, 2)} />
-                                    <TextInput style={[authStyles.input, styles.input]} ref={inputs[3]} maxLength={1} value={input4Value} onChangeText={(text) => setInput4Value(text)} onKeyPress={(e) => handleKeyPress(e, 3)} />
-                                    <TextInput style={[authStyles.input, styles.input]} ref={inputs[4]} maxLength={1} value={input5Value} onChangeText={(text) => setInput5Value(text)} onKeyPress={(e) => handleKeyPress(e, 4)} />
-                                    <TextInput style={[authStyles.input, styles.input]} ref={inputs[5]} maxLength={1} value={input6Value} onChangeText={(text) => setInput6Value(text)} onKeyPress={(e) => handleKeyPress(e, 5)} />
+                                    <TextInput
+                                        style={[authStyles.input, styles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        ref={inputs[0]}
+                                        maxLength={1}
+                                        value={input1Value}
+                                        onChangeText={(text) => setInput1Value(text)} onKeyPress={(e) => handleKeyPress(e, 0)}
+                                    />
+
+                                    <TextInput
+                                        style={[authStyles.input, styles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        ref={inputs[1]}
+                                        maxLength={1}
+                                        value={input2Value}
+                                        onChangeText={(text) => setInput2Value(text)} onKeyPress={(e) => handleKeyPress(e, 1)}
+                                    />
+
+                                    <TextInput
+                                        style={[authStyles.input, styles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        ref={inputs[2]}
+                                        maxLength={1}
+                                        value={input3Value}
+                                        onChangeText={(text) => setInput3Value(text)} onKeyPress={(e) => handleKeyPress(e, 2)}
+                                    />
+
+                                    <TextInput
+                                        style={[authStyles.input, styles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        ref={inputs[3]}
+                                        maxLength={1}
+                                        value={input4Value}
+                                        onChangeText={(text) => setInput4Value(text)} onKeyPress={(e) => handleKeyPress(e, 3)}
+                                    />
+
+                                    <TextInput
+                                        style={[authStyles.input, styles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        ref={inputs[4]}
+                                        maxLength={1}
+                                        value={input5Value}
+                                        onChangeText={(text) => setInput5Value(text)} onKeyPress={(e) => handleKeyPress(e, 4)}
+                                    />
+
+                                    <TextInput
+                                        style={[authStyles.input, styles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        ref={inputs[5]}
+                                        maxLength={1}
+                                        value={input6Value}
+                                        onChangeText={(text) => setInput6Value(text)} onKeyPress={(e) => handleKeyPress(e, 5)}
+                                    />
                                 </View>
 
                                 <TouchableOpacity style={authStyles.linkContainer} onPress={handleCodeResubmit}>
@@ -159,10 +221,7 @@ export default function VerifyEmailScreen() {
                                 </TouchableOpacity>
                             </View>
                             <View style={gStyles.buttonContainer}>
-                                <Button text="Continuar" press={handleCodeSubmit}>
-                                    <View style={{ height: 30 }}>
-                                        <Text style={gStyles.textButton}>Continuar</Text>
-                                    </View>
+                                <Button text="Continuar" action={handleCodeSubmit}>
                                 </Button>
                             </View>
                         </View>

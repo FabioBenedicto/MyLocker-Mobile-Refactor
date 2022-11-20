@@ -46,15 +46,23 @@ export default function App() {
     return (
         <NavigationContainer>
             <DarkThemeContextProvider>
-                <ToastProvider placement="top" animationType="slide-in" offsetTop={getStatusBarHeight() + 20} textStyle={{ textAlign: 'center' }}>
+                <ToastProvider 
+                placement="top" 
+                animationType="slide-in" 
+                offsetTop={getStatusBarHeight() + 24} 
+                textStyle={{ textAlign: 'center' }}
+                >
                     <UserContextProvider>
                         <LockerContextProvider>
                             <StatusBar
                                 animated
-                                barStyle="light-content"
                                 backgroundColor="#002147"
+                                style="light"
                             />
-                            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                            <View 
+                            style={{ flex: 1 }} 
+                            onLayout={onLayoutRootView}
+                            >
                                 <Routes />
                             </View>
                         </LockerContextProvider>

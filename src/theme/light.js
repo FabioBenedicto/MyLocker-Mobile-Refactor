@@ -2,8 +2,16 @@ const LIGHT = {
     COLORS: {
         BACKGROUND: '#FFFFFF',
 
+        INPUT_BACKGROUND: '#FFFFFF',
+        BUTTON_LOADING_BACKGROUND: '#67737E',
+        BUTTON_BACKGROUND: '#0085FF',
+
         TEXT_BLACK: '#000000',
         TEXT_GRAY: '#666666',
+
+        TEXT_PRIMARY: '#000000',
+        TEXT_SECONDARY: '#666666',
+        TEXT_BUTTON: '#FFFFFF',
 
         LINK: '#0085FF',
         DISABLED: '#7D7B7B',

@@ -18,6 +18,9 @@ import api from '../../services/api';
 import styles from './styles';
 import DEFAULT from '../../theme/default';
 import appSyles from '../../styles/appStyles';
+import useDarkTheme from '../../hooks/useDarkTheme';
+import DARK from '../../theme/dark';
+import LIGHT from '../../theme/light';
 
 export default function LockersMap() {
     const navigation = useNavigation();
@@ -72,6 +75,7 @@ export default function LockersMap() {
     const [arrowRightFloorEnabled, setArrowRightFloorEnabled] = useState(false);
     const { width, height } = Dimensions.get('window');
     const anV = useRef(new Animated.ValueXY({ x: 0, y: height })).current;
+    const darkTheme = useDarkTheme();
 
     const loadLockers = async () => {
         api
@@ -356,8 +360,8 @@ export default function LockersMap() {
 
                                     <View style={{ marginTop: 20 }}>
                                         <View View style={[gStyles.textContainer]}>
-                                            <Text style={gStyles.title}>Alugue um Armário</Text>
-                                            <Text style={gStyles.subtitle}>Selecione o bloco que você deseja</Text>
+                                            <Text style={[gStyles.title, darkTheme ? { color: DARK.COLORS.PRIMARY_TEXT } : { color: LIGHT.COLORS.PRIMARY_TEXT }]}>Alugue um Armário</Text>
+                                            <Text style={[gStyles.subtitle, darkTheme ? { color: DARK.COLORS.SECONDARY_TEXT } : { color: LIGHT.COLORS.SECONDARY_TEXT }]}>Selecione o bloco que você deseja</Text>
                                         </View>
                                     </View>
 
@@ -366,11 +370,11 @@ export default function LockersMap() {
                                         data={mapLocker[floor - 1]}
                                         renderItem={({ item }) => {
                                             if (item.type == 'line') {
-                                                return (<View style={[gStyles.line, styles.line]} />);
+                                                return (<View style={[gStyles.line, styles.line, darkTheme ? { borderBottomColor: DEFAULT.COLORS.WHITE } : { borderBottomColor: DEFAULT.COLOR.BLACK }]} />);
                                             }
 
                                             if (item.type) {
-                                                return (<Text style={[gStyles.title, styles.flatData]}> {item.data} </Text>);
+                                                return (<Text style={[gStyles.title, styles.flatData, darkTheme ? { color: DARK.COLORS.PRIMARY_TEXT } : {}]}> {item.data} </Text>);
                                             }
                                             return (<TouchableOpacity onPress={item.pressFunc} style={styles.flatDataL}><Image source={item.data} style={styles.lockerImage} resizeMode="contain" /></TouchableOpacity>);
                                         }}
@@ -380,17 +384,17 @@ export default function LockersMap() {
                                         <TouchableOpacity onPress={backFloor} disabled={!arrowLeftFloorEnabled}>
                                             <MaterialIcons
                                                 name="keyboard-arrow-left"
-                                                color={arrowLeftFloorEnabled ? '#000000' : '#7D7B7B'}
+                                                color={arrowLeftFloorEnabled ? darkTheme ? DEFAULT.COLORS.WHITE : DEFAULT.COLORS.BLACK : '#7D7B7B'}
                                                 size={64}
                                             />
                                         </TouchableOpacity>
 
-                                        <Text style={gStyles.title}>{floor}º Andar</Text>
+                                        <Text style={[gStyles.title, darkTheme ? { color: DARK.COLORS.PRIMARY_TEXT } : { color: LIGHT.COLORS.PRIMARY_TEXT }]}>{floor}º Andar</Text>
 
                                         <TouchableOpacity onPress={() => { goFloor(); console.log(floor); }} disabled={!arrowRightFloorEnabled}>
                                             <MaterialIcons
                                                 name="keyboard-arrow-right"
-                                                color={arrowRightFloorEnabled ? '#000000' : '#7D7B7B'}
+                                                color={arrowRightFloorEnabled ? darkTheme ? DEFAULT.COLORS.WHITE : DEFAULT.COLORS.BLACK : '#7D7B7B'}
                                                 size={64}
                                             />
                                         </TouchableOpacity>
@@ -402,8 +406,8 @@ export default function LockersMap() {
                         <>
                             <View style={{ marginTop: 20 }}>
                                 <View View style={gStyles.textContainer}>
-                                    <Text style={gStyles.title}>Alugue um Armário</Text>
-                                    <Text style={[gStyles.subtitle]}>Selecione o armário que você deseja.</Text>
+                                    <Text style={[gStyles.title, darkTheme ? { color: DARK.COLORS.PRIMARY_TEXT } : { color: LIGHT.COLORS.PRIMARY_TEXT }]}>Alugue um Armário</Text>
+                                    <Text style={[gStyles.subtitle, darkTheme ? { color: DARK.COLORS.SECONDARY_TEXT } : { color: LIGHT.COLORS.SECONDARY_TEXT }]}>Selecione o armário que você deseja.</Text>
                                 </View>
                             </View>
 

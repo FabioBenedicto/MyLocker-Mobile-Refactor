@@ -8,6 +8,12 @@ import MyLockerLogo from '../../assets/MyLockerLogo.png';
 import Button from '../../components/Button';
 import useUser from '../../hooks/useUser';
 import authStyles from '../../styles/authStyles';
+import useDarkTheme from '../../hooks/useDarkTheme';
+import DARK from '../../theme/dark';
+import LIGHT from '../../theme/light';
+import DEFAULT from '../../theme/default';
+import ShortLogoWhite from '../../assets/ShortLogoWhite.png'
+import Back from '../../components/Back';
 
 import api from '../../services/api';
 import globalStyles from '../../styles/globalStyles';
@@ -20,6 +26,7 @@ export default function ForgotPasswordScreen() {
     const [loading, setLoading] = useState(false);
     const { user, setUser } = useUser();
     const toast = useToast();
+    const darkTheme = useDarkTheme();
 
     const handleEmailInput = () => {
         const requestBody = {
@@ -64,17 +71,6 @@ export default function ForgotPasswordScreen() {
             },
         );
         BackHandler.addEventListener('hardwareBackPress', backAction);
-        navigation.setOptions({
-            headerLeft: () => (
-                <TouchableOpacity onPress={() => { navigation.navigate('LoginScreen'); }} activeOpacity={0.8}>
-                    <MaterialIcons
-                        name="arrow-back"
-                        size={40}
-                        color="blue"
-                    />
-                </TouchableOpacity>
-            ),
-        });
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
@@ -85,43 +81,52 @@ export default function ForgotPasswordScreen() {
     return (
         <ScrollView
             bounces={false}
-            onLayout={(event) => {
-                if (!isKeyboardVisible) {
-                    setContainerHeight(event.nativeEvent.layout.height);
-                }
-            }}
+            onLayout={(event) => { if (!isKeyboardVisible) { setContainerHeight(event.nativeEvent.layout.height); } }}
         >
             <KeyboardAvoidingView behavior="height">
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
                     <ScrollView bounces={false}>
                         <View style={[authStyles.container, { height: containerHeight }]}>
-                            <TouchableOpacity onPress={() => { navigation.goBack(); }} style={{ alignSelf: 'flex-start', position: 'absolute', top: getStatusBarHeight() + 40 }}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-left"
-                                    color="#0085FF"
-                                    size={49}
-                                />
-                            </TouchableOpacity>
+                            <View style={authStyles.backContainer}>
+                            <Back action={() => { navigation.navigate('LoginScreen');}}/>
+                            </View>
                             <View style={authStyles.logoContainer}>
-                                <Image source={MyLockerLogo} style={globalStyles.image} />
+                                <Image
+                                    source={darkTheme ? ShortLogoWhite : MyLockerLogo}
+                                    style={globalStyles.image}
+                                />
                             </View>
                             <View style={globalStyles.fullWidth}>
                                 <View style={authStyles.textContainer}>
-                                    <Text style={authStyles.title}>Entrar</Text>
-                                    <Text style={authStyles.subtitle}>Digite seu e-mail da Unicamp</Text>
+                                    <Text
+                                        style={[authStyles.title, darkTheme
+                                            ? { color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { color: DARK.COLORS.TEXT_PRIMARY }]}
+                                    >
+                                        Entrar
+                                    </Text>
+                                    <Text
+                                        style={[authStyles.subtitle, darkTheme
+                                            ? { color: DARK.COLORS.TEXT_SECONDARY }
+                                            : { color: DARK.COLORS.TEXT_SECONDARY }]}
+                                    >
+                                        Digite seu e-mail da Unicamp
+                                    </Text>
                                 </View>
                                 <View style={globalStyles.fullWidth}>
-                                    <TextInput style={authStyles.input} value={email} placeholder="E-mail Institucional" placeholderTextColor="#7D7B7B" onChangeText={(text) => setEmail(text)} onSubmitEditing={() => { Keyboard.dismiss(); }} autoCapitalize="none" />
+                                    <TextInput
+                                        style={[authStyles.input, darkTheme
+                                            ? { backgroundColor: DARK.COLORS.INPUT_BACKGROUND, color: DARK.COLORS.TEXT_PRIMARY }
+                                            : { backgroundColor: LIGHT.COLORS.INPUT_BACKGROUND, color: LIGHT.COLORS.TEXT_PRIMARY }]}
+                                        value={email}
+                                        placeholder="E-mail Institucional"
+                                        placeholderTextColor="#7D7B7B"
+                                        onChangeText={(text) => setEmail(text)} onSubmitEditing={() => { Keyboard.dismiss(); }}
+                                        autoCapitalize="none" />
                                 </View>
                             </View>
                             <View style={globalStyles.buttonContainer}>
-                                <Button press={handleEmailInput} disabled={!!loading}>
-                                    <View style={{ height: 30 }}>
-                                        {loading
-                                            ? <ActivityIndicator size="large" color="white" />
-                                            : <Text style={globalStyles.textButton}>Continuar</Text>}
-                                    </View>
-                                </Button>
+                                <Button text="Continuar" loading={loading} action={handleEmailInput}/>
                             </View>
                         </View>
                     </ScrollView>

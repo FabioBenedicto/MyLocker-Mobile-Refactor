@@ -28,14 +28,6 @@ const globalStyles = StyleSheet.create({
         paddingHorizontal: '4%',
         marginBottom: 40,
     },
-    buttonContent: {
-        height: 30,
-    },
-    textButton: {
-        color: DEFAULT.COLORS.WHITE,
-        fontSize: 25,
-        fontFamily: DEFAULT.FONT_FAMILY.BOLD,
-    },
 });
 
 export default globalStyles;
